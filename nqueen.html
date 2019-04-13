@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="nqueen.css">
+    <script type="text/javascript" src="nqueen-core.js"></script>
+    <script type="text/javascript" src="nqueen-view.js"></script>
+    <script type="text/javascript" src="nqueen.js"></script>
+    <script type="text/javascript">
+        var ID_OVERLAY = 'overlay';
+        var ID_FRM_BOARDSIZE = 'frmBoardSize';
+        var ID_FRM_RESULT = 'frmResult';
+        var ID_RESULT_COUNT = 'resultCount';
+        var ID_RESULT_NOTE_SYMM = 'resultNoteSymm';
+
+        var showFrame = function(dom, clickListener) {
+            dom.setAttribute('style', 'display:block');
+        };
+        var hideFrame = function(dom) {
+            dom.setAttribute('style', '');
+        };
+
+        var showOverlay = function(clickListener) {
+            var domOverlay = document.getElementById(ID_OVERLAY);
+            showFrame(domOverlay);
+            
+            // When an event listener is specified as argument,
+            //  the listener is called only once when the overlay is clicked.
+            if(clickListener) {
+                let l = function() {
+                    clickListener();
+                    domOverlay.removeEventListener('click', l);
+                };
+                domOverlay.addEventListener('click', l);
+            }
+        };
+
+        var hideOverlay = function() {
+            var domOverlay = document.getElementById(ID_OVERLAY);
+            hideFrame(domOverlay);
+        };
+
+        var showBoardSizeFrame = function() {
+            var domFrmBoardSize = document.getElementById(ID_FRM_BOARDSIZE);
+            var iBoardSize = nq.Memory.workBoard.getBoardSize();
+
+            // set selected state to an element of current board size
+            var boardsizes = document.getElementsByClassName('boardsize');
+            for(var i = 0; i < boardsizes.length; i++) {
+                if(boardsizes[i].getAttribute('data-boardsize') == ('' + iBoardSize)) {
+                    boardsizes[i].click();
+                    break;
+                }
+            }
+
+            showFrame(domFrmBoardSize);
+        };
+
+        var hideBoardSizeFrame = function() {
+            var domFrmBoardSize = document.getElementById(ID_FRM_BOARDSIZE);
+            hideFrame(domFrmBoardSize);
+        };
+
+        var showResultFrame = function() {
+            var domResultFrame = document.getElementById(ID_FRM_RESULT);
+            showOverlay(hideResultFrame);
+            showFrame(domResultFrame);
+        }
+
+        var hideResultFrame = function() {
+            var domResultFrame = document.getElementById(ID_FRM_RESULT);
+            hideOverlay();
+            hideFrame(domResultFrame);
+        }
+
+        
+        var initBoardSizeFrame = function() {
+            // add event listener to the button to show board size frame
+            var btnShowBoardSize = document.getElementById('btnShowBoardSize');
+            btnShowBoardSize.addEventListener('click', function() {
+                showOverlay();
+                showBoardSizeFrame();
+            });
+
+            // add event listener to elemenets of board size selection
+            var boardsizes = document.getElementsByClassName('boardsize');
+            for(var i = 0; i < boardsizes.length; i++) {
+                (function(bs) {
+                    var sClassNameSelected = 'boardsize-selected';
+                    bs.addEventListener('click', function() {
+                        for(var k = 0; k < boardsizes.length; k++) {
+                            nq.view.DomUtil.removeClassName(boardsizes[k], sClassNameSelected);
+                        }
+                        nq.view.DomUtil.addClassName(bs, sClassNameSelected);
+                    });
+                })(boardsizes[i]);
+            }
+
+            // add event listener to determine a board size
+            var btnInitBoardSize = document.getElementById('btnInitBoardSize');
+            btnInitBoardSize.addEventListener('click', function() {
+                var boardsize = document.getElementsByClassName('boardsize-selected');
+                var chkExcludeSymmetry = document.getElementById('chkExcludeSymmetry')
+                var iBoardSize = parseInt(boardsize[0].getAttribute('data-boardsize'));
+                var isExcludeSymmetry = chkExcludeSymmetry.checked;
+                var domResultNoteSymm = document.getElementById(ID_RESULT_NOTE_SYMM);
+                
+                nq.Setup.reset(iBoardSize, isExcludeSymmetry);
+
+                hideBoardSizeFrame();
+                hideOverlay();
+
+                if(isExcludeSymmetry) {
+                    nq.view.DomUtil.setClassName(domResultNoteSymm, 'result-note_asymmetry');
+                } else {
+                    nq.view.DomUtil.setClassName(domResultNoteSymm, 'result-note_symmetry');
+                }
+            });
+
+            // add event listener to show/hide result frame
+            var domResultCount = document.getElementById(ID_RESULT_COUNT);
+            domResultCount.addEventListener('click', function() {
+                showResultFrame();
+            });
+
+            var btnCancelBoardSize = document.getElementById('btnCancelBoradSize');
+            btnCancelBoardSize.addEventListener('click', function() {
+                hideBoardSizeFrame();
+                hideOverlay();
+            });
+        };
+
+        onload = function() {
+            var args = {};
+            args.domBoard = document.getElementById('board');
+            args.domResult = document.getElementById(ID_FRM_RESULT);
+            args.btnAll = document.getElementById('btnAll');
+            args.btnStep = document.getElementById('btnStep');
+            args.btnAuto = document.getElementById('btnAuto');
+            args.btnStop = document.getElementById('btnStop');
+            args.rngInterval = document.getElementById('rngInterval');
+            args.domResultCount = document.getElementById(ID_RESULT_COUNT);
+            args.isExcludeSymmetry = false;
+
+            nq.Setup.init(args);
+
+            initBoardSizeFrame();
+
+            {   // display or not display a note that symmetry is excluded or not.
+                let domResultNoteSymm = document.getElementById(ID_RESULT_NOTE_SYMM);
+                let sClassName = (args.isExcludeSymmetry)
+                         ? 'result-note_asymmetry'
+                         : 'result-note_symmetry';
+                nq.view.DomUtil.setClassName(domResultNoteSymm, sClassName);
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Overlay -->
+    <div id="overlay"></div>
+    <!-- Frame for selecting board size -->
+    <div id="frmBoardSize">
+        <div class="boardsize-pane">
+            <span>Select a board size</span>
+            <div>
+                <div class="boardsize" data-boardsize="4">4</div>
+                <div class="boardsize" data-boardsize="5">5</div>
+                <div class="boardsize" data-boardsize="6">6</div>
+            </div>
+            <div>
+                <div class="boardsize" data-boardsize="7">7</div>
+                <div class="boardsize" data-boardsize="8">8</div>
+                <div class="boardsize" data-boardsize="9">9</div>
+            </div>
+            <div>
+                <div class="boardsize" data-boardsize="10">10</div>
+                <div class="boardsize" data-boardsize="11">11</div>
+                <div class="boardsize" data-boardsize="12">12</div>
+            </div>
+            <div>
+                <input type="checkbox" id="chkExcludeSymmetry">exclude symmetry
+            </div>
+            <div class="boardsize-determine-pane">
+                <a href="javascript:void(0)" id="btnInitBoardSize" class="buttonstyle">OK(Init)</a>
+                <a href="javascript:void(0)" id="btnCancelBoradSize" class="buttonstyle">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result -->
+    <div id="frmResult"></div>
+
+    <!-- Menubar -->
+    <div class="menubar">
+        <div class="menubar_menuarea-left"></div>
+        N Queen
+        <div class="menubar_menuarea-right">
+            <div class="menubar_menu-item">
+                <a href="javascript:void(0)" id="btnShowBoardSize" class="buttonstyle">Board Size</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Board for working -->
+    <div id="board"></div>
+
+    <!-- Result count -->
+    <div>Result: <a href="javascript:void(0)" id="resultCount"></a> count <span id="resultNoteSymm">(excluded symmetry)</span></div>
+
+    <!-- Controller -->
+    <div>
+        <fieldset>
+            <legend>Batch</legend>
+            <a href="javascript:void(0)" id="btnAll" class="buttonstyle controller_button">All</a>
+        </fieldset>
+        <fieldset>
+            <legend>Step</legend>
+            <a href="javascript:void(0)" id="btnStep" class="buttonstyle controller_button">Step</a><br>
+            fast<input type="range" id="rngInterval" value="50" min="10" max="1000" step="10">slow<br>
+            <a href="javascript:void(0)" id="btnAuto" class="buttonstyle controller_button">Auto</a>
+            <a href="javascript:void(0)" id="btnStop" class="buttonstyle controller_button">Stop</a>
+        </fieldset>
+    </div>
+</body>
+</html>

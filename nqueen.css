@@ -1,0 +1,220 @@
+
+/*
+ * Built-in Components
+ */
+
+fieldset {
+    border-radius: 5px;
+}
+
+/*
+ * Classes for General Purpose
+ */
+
+.buttonstyle {
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    color: #e8e8e8;
+    line-height: 1.5;
+    border-radius: 3px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    background: linear-gradient(#aaaaaa 0%, #888888 100%);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.28);
+    padding-top: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 1px;
+}
+
+.buttonstyle:hover {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+    background-image: linear-gradient(#b5b5b5 0%, #a4a4a4 100%);
+}
+.buttonstyle:active {
+    -webkit-transform: translateY(1px);
+    transform: translateY(1px);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+    background-image: linear-gradient(#bbbbbb 0%, #aaaaaa 100%);
+}
+
+
+/*
+ * Classes for page elements
+ */
+
+.menubar {
+    width: 100%;
+    height: 32px;
+    background-color: #989898;
+    font-size: 24px;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.menubar_menuarea-left {
+    width: 140px;
+    height: inherit;
+    float: left;
+    margin: 0px;
+}
+
+.menubar_menuarea-right {
+    width: 140px;
+    height: 100%;
+    line-height: 100%;
+    float: right;
+    font-size: 0.7em;
+    margin: 0px;
+}
+
+.menubar_menu-item {
+    height: 100%;
+    line-height: 1.5;
+    vertical-align: middle;
+}
+
+.controller_button {
+    width: 100px;
+    margin: 5px;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    opacity: 0.6;
+    z-index: 6;
+}
+
+#frmBoardSize {
+    display: none;
+    position: fixed;
+    width: 70%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    background: #EEEEEE;
+    opacity: 0.9;
+    margin: auto;
+    text-align: center;
+    border: solid 3px #000000;
+    padding: 5px;
+    z-index: 7;
+}
+
+.boardsize-pane {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    margin: 10%;
+}
+
+.boardsize-determine-pane {
+    margin-top: 10px;
+}
+
+#frmResult {
+    display: none;
+    position: fixed;
+    width: 80%;
+    height: 90%;
+    top: 5%;
+    left: 10%;
+    background: #EEEEEE;
+    opacity: 0.9;
+    margin: auto;
+    text-align: center;
+    border: solid 3px #000000;
+    padding: 5px;
+    z-index: 7;
+    overflow: scroll;
+}
+
+.boardsize {
+    display: inline-block;
+    width: 80px;
+    height: 50px;
+    font-size: 24px;
+    color: #333311;
+    border: solid #34C;
+    text-align: center;
+    line-height: 2.1;
+    margin: 3px;
+    border-radius: 4px;
+    background: #CCCCEE;
+}
+
+.boardsize-selected {
+    color: #000000;
+    background: #8888AA;
+}
+
+.result-board-area {
+    display: inline-block;
+    margin: 5px;
+}
+
+#board {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#resultCount {
+    font-size: 1.2em;
+}
+
+.result-note_symmetry {
+    display: none;
+}
+
+.result-note_asymmetry {
+    display: inline;
+}
+
+/*
+ * Classes for board elements
+ */
+
+.cell {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    position: relative;
+    display: inline-block;
+    border: solid 2px black;
+    line-height: 1.5;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px;
+}
+
+.cell-small {
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    border: solid 1px black;
+}
+
+.cell-cursor {
+    border-color: red;
+}
+
+.cell-territory {
+    background-color: #aaeeaa;
+}
+
+.cell-territory-emphasis {
+    background-color: #33ee33;
+}
+
+.cell-queen {
+    background: #a4c6ff;
+}
